@@ -1,0 +1,86 @@
+<html>
+<head>
+<style>
+body { font-family: SansSerif; font-size: 13pt; color: #E0E0E0; background-color: #202020; background-image: url(%BG%); margin: 8px; }
+.title { font-size: 15pt; font-weight: bold; color: #9C9CFF; text-decoration: underline; }
+.link { color: #9C9CFF; text-decoration: underline; }
+.date { color: #E0E0E0; margin-top: 6px; }
+.notes { margin-left: 36px; margin-top: 4px; margin-bottom: 18px; }
+.section { margin-top: 12px; }
+.green { color: #7CFC7C; }
+</style>
+</head>
+<body>
+
+<span class="title">ZloyLauncher v%VERSION% (jar) (exe)</span>
+<div class="date">13 Октября 2026, 12:00 MSK</div>
+<div class="notes">
+<div>Добавлено:</div>
+<div>+ <span class="green">вкладка «Мои серверы»</span>: свои серверы с серой иконкой текстурпака, вход прямо из лаунчера</div>
+<div>+ <span class="green">автоопределение версии сервера</span>: по списку BetaCraft или опросом самого сервера</div>
+<div>+ для каждого сервера можно выбрать версию вручную: ванильную или свою (моды)</div>
+<div>+ публичный сервер можно сохранить в «Мои серверы»</div>
+<div>+ кнопка «Обновить список» в каталоге модов</div>
+
+<div class="section">Исправления:</div>
+<div>&#8226; <span class="green">снова есть звуки и музыка</span>: прокси BetaCraft перестал работать, теперь у лаунчера свой</div>
+<div>&#8226; <span class="green">снова есть скины и плащи</span> (с лицензии и других игроков) во всех старых версиях</div>
+<div>&#8226; лицензия больше не пропадает из списка при перезапуске или обновлении лаунчера</div>
+<div>&#8226; если вход в лицензию не удался, при следующем запуске лаунчер снова попробует её</div>
+<div>&#8226; вход на сервер больше не меняет версию сборки навсегда</div>
+</div>
+
+<span class="title">ZloyLauncher v1.1 (jar) (exe)</span>
+<div class="date">12 Октября 2026, 18:00 MSK</div>
+<div class="notes">
+<div>Добавлено:</div>
+<div>+ <span class="green">вкладка «Сборки»</span>: все сборки плитками с иконками, поиск, меню по правому клику</div>
+<div>+ 23 встроенные пиксельные иконки для сборок (крипер, Стив, Херобрин, TNT, блоки) и свои картинки</div>
+<div>+ заметки к сборкам, время в игре и дата последнего запуска</div>
+<div>+ копирование сборки вместе с папкой игры, переименование прямо из вкладки</div>
+<div>+ <span class="green">выбор Java как в Prism Launcher</span>: список всех Java на компьютере с версией и архитектурой</div>
+<div>+ ZloyLauncher.exe с иконкой, сам находит Java 8</div>
+
+<div class="section">Исправления:</div>
+<div>&#8226; игра больше не падает с NoClassDefFoundError, если лаунчер обновили или запустили второй раз</div>
+<div>&#8226; русский текст в статусе Discord больше не превращается в знаки вопроса</div>
+<div>&#8226; окно настроек всегда показывает выбранную сборку</div>
+
+<div class="section">Другие изменения:</div>
+<div>&#8226; если у сборки Java новее 8-й, лаунчер сам найдёт Java 8 на компьютере</div>
+<div>&#8226; ID приложения Discord можно поменять в настройках</div>
+</div>
+
+<span class="title">ZloyLauncher v1.0 (jar)</span>
+<div class="date">12 Октября 2026, 12:00 MSK</div>
+<div class="notes">
+<div>Добавлено:</div>
+<div>+ <span class="green">несколько аккаунтов</span>: лицензия Microsoft и сколько угодно пиратских</div>
+<div>+ меню «Аккаунты» на главном экране и окно управления аккаунтами</div>
+<div>+ связка с папкой BetaCraft Launcher: общие версии, сборки и аккаунты</div>
+<div>+ меню «Папки»: папка сборки, папка лаунчера, выбор папки данных</div>
+<div>+ встроенный русский язык, работает без интернета</div>
+
+<div class="section">Исправления:</div>
+<div>&#8226; лицензия больше не удаляется из лаунчера, если войти не удалось</div>
+<div>&#8226; повторный вход в тот же аккаунт не создаёт дубликат</div>
+<div>&#8226; битые записи в accounts.json больше не ломают запуск</div>
+<div>&#8226; проект снова собирается (Gradle 8.14)</div>
+
+<div class="section">Другие изменения:</div>
+<div>&#8226; новое имя, иконка и логотип</div>
+<div>&#8226; ник пиратского аккаунта можно вписать прямо на главном экране, как раньше</div>
+<div>&#8226; автообновление с серверов BetaCraft отключено</div>
+<div>&#8226; в статусе Discord теперь ZloyLauncher</div>
+</div>
+
+<a class="title" href="https://github.com/betacraftuk/betacraft-launcher">BetaCraft v1.09_17</a> <a class="link" href="https://github.com/betacraftuk/betacraft-launcher">(исходники)</a>
+<div class="date">Основа форка</div>
+<div class="notes">
+<div>&#8226; ZloyLauncher основан на BetaCraft Launcher (GPL-3.0)</div>
+<div>&#8226; версии игры, библиотеки и список серверов по-прежнему загружаются с серверов BetaCraft</div>
+<div>&#8226; поддерживаются все версии от Pre-Classic до 1.5.2</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,5 @@
+#!/bin/bash
+
+DIR=$(cd "$(dirname "$0")"; pwd)
+
+exec java -Xdock:name="ZloyLauncher" -Xdock:icon="$DIR/../Resources/icon.icns" -cp ".;$DIR;" -jar "$DIR/ZloyLauncher.jar"

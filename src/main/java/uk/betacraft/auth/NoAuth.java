@@ -1,0 +1,38 @@
+package uk.betacraft.auth;
+
+import java.util.UUID;
+
+import uk.betacraft.auth.Credentials.AccountType;
+
+public class NoAuth extends Authenticator {
+	private Credentials credentials = new Credentials();
+
+	public NoAuth(Credentials c) {
+		this.credentials = c;
+	}
+
+	public NoAuth(String username) {
+		this(username, UUID.randomUUID().toString());
+	}
+
+	public NoAuth(String username, String uuid) {
+		this.credentials.username = username;
+		this.credentials.local_uuid = uuid;
+		this.credentials.account_type = AccountType.OFFLINE;
+	}
+
+	public boolean authenticate() {
+		this.authSuccess();
+		return true;
+	}
+
+	public boolean invalidate() {
+		this.credentials = null;
+		return true;
+	}
+
+	public Credentials getCredentials() {
+		return this.credentials;
+	}
+
+}

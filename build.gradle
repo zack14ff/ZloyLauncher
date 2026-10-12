@@ -1,0 +1,115 @@
+plugins {
+	id 'java'
+	id 'eclipse'
+}
+
+// Old Minecraft versions want Java 8, so the launcher targets it too
+java {
+	sourceCompatibility = JavaVersion.VERSION_1_8
+	targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+tasks.withType(JavaCompile).configureEach {
+	options.encoding = 'UTF-8'
+	if (JavaVersion.current().isJava9Compatible()) {
+		options.release = 8
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+configurations {
+	bundled
+	implementation.extendsFrom bundled
+}
+
+// Stand-ins for the Discord RPC library, whose Maven repository no longer exists.
+// They are only compiled against, the real discord_rpc.jar is downloaded at runtime.
+sourceSets {
+	rpcStubs
+}
+
+dependencies {
+	bundled 'com.google.code.gson:gson:2.10.1'
+
+	compileOnly sourceSets.rpcStubs.output
+}
+
+jar {
+	archiveFileName = "${project.name}.jar"
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+	from {
+		configurations.bundled.collect {
+			it.isDirectory() ? it : zipTree(it)
+		}
+	}
+	exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/versions/**', 'module-info.class'
+	manifest {
+		attributes(
+			'Main-Class': 'org.betacraft.launcher.Launcher'
+		)
+	}
+}
+
+tasks.register('osxBuildApp') {
+	dependsOn jar
+
+	doLast {
+		def dist = "${buildDir}/app/ZloyLauncher.app"
+		mkdir("$dist/Contents/MacOS")
+		mkdir("$dist/Contents/Resources")
+		copy {
+			from "${projectDir}/src/main/app/Info.plist"
+			into "$dist/Contents"
+		}
+		copy {
+			from "${projectDir}/src/main/app/PkgInfo"
+			into "$dist/Contents"
+		}
+		copy {
+			from "${projectDir}/src/main/app/ZloyLauncher"
+			into "$dist/Contents/MacOS"
+		}
+		copy {
+			from "${projectDir}/src/main/app/icon.icns"
+			into "$dist/Contents/Resources"
+		}
+		copy {
+			from "${buildDir}/libs/${project.name}.jar"
+			into "$dist/Contents/MacOS"
+		}
+		exec {
+			workingDir "${buildDir}/app/"
+			commandLine('zip', '-rvFSX', "../libs/ZloyLauncher-macOS.zip", '.')
+		}
+	}
+}
+
+// ZloyLauncher.exe: the jar packed into a small Windows starter with the launcher's icon.
+// Uses the C# compiler that ships with Windows, so nothing extra has to be installed.
+def cscPath = "${System.getenv('WINDIR')}/Microsoft.NET/Framework64/v4.0.30319/csc.exe"
+
+tasks.register('exe', Exec) {
+	dependsOn jar
+	onlyIf { file(cscPath).exists() }
+
+	def jarFile = layout.buildDirectory.file("libs/${project.name}.jar")
+	def exeFile = layout.buildDirectory.file("libs/${project.name}.exe")
+	inputs.file(jarFile)
+	inputs.files('src/main/exe/ZloyLauncher.cs', 'src/main/exe/icon.ico')
+	outputs.file(exeFile)
+
+	executable cscPath
+	args '/nologo', '/codepage:65001', '/target:winexe', '/optimize+',
+		'/reference:System.Windows.Forms.dll',
+		"/win32icon:${file('src/main/exe/icon.ico')}",
+		"/resource:${jarFile.get().asFile},ZloyLauncher.jar",
+		"/out:${exeFile.get().asFile}",
+		file('src/main/exe/ZloyLauncher.cs').path
+}
+
+if (System.getProperty('os.name').toLowerCase().contains('windows')) {
+	tasks.named('build') { dependsOn 'exe' }
+}

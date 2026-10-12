@@ -1,0 +1,207 @@
+version_button:Выбрать версию
+play_button:Играть
+options_button:Настроить сборку
+language:Язык
+downloading:Загрузка...
+downloading_resource:Загрузка: %s
+packing_mod:Упаковка мода...
+manual_download:Скачать вручную
+username_field_empty:Введите ник!
+lang_title:Выбор языка
+unexpected_error:Непредвиденная ошибка: %s
+no_connection:Нет стабильного подключения к интернету.
+download_fail:Не удалось скачать.
+no_selection:Сначала нужно что-нибудь выбрать!
+update_check:Доступно обновление
+use_betacraft:Прокси для скинов и звуков
+discord_rpc:Статус в Discord
+intel_trick:Трюк производительности для Intel Graphics
+launch_arguments:Аргументы JVM
+keep_launcher_open:Не закрывать лаунчер
+width:ширина:
+height:высота:
+options_title:Настройки сборки
+ok:OK
+sort_oldest:Сортировка: сначала старые
+sort_newest:Сортировка: сначала новые
+version_title:Выбор версии
+addon_list_title:Дополнения
+addon_no_desc:Нет описания.
+addon_show_info:Подробнее
+logging_in:Вход...
+login_title:Вход
+log_in_button:Войти
+log_out_button:Выйти
+login_email_nickname:E-mail:
+login_password:Пароль:
+login_mojang_header:... или войдите с аккаунтом Mojang:
+login_microsoft_button:Войти через Microsoft
+login_microsoft_title:Вход в аккаунт Microsoft
+login_microsoft_error:Ошибка входа Microsoft
+login_microsoft_parent:Нужно разрешение родителей. Добавьте аккаунт в семейную группу Microsoft.
+login_microsoft_no_xbox:К аккаунту не привязан профиль Xbox
+login_microsoft_no_minecraft:На этом аккаунте не куплен Minecraft.
+login_microsoft_code_line1:Чтобы продолжить, откройте в браузере:
+login_microsoft_code_line2:и введите код:
+login_relogin:Нужно заново войти в аккаунт Microsoft (срок входа истёк)
+login_failed:Не удалось войти
+login_failed_invalid_credentials:Неверный e-mail или пароль.
+java_executable:Путь к Java:
+java_invalid:Указанный путь к Java неверен. Использовать рекомендуемую Java?
+java_too_recent:Указанная Java новее 8-й версии. Использовать рекомендуемую Java?
+java_recommended_not_found:Рекомендуемая Java не найдена. Скачать и установить её?
+java_wrong_arch:Похоже, у вас Java не той архитектуры (ARM или 32-битная x86). Если будут проблемы, установите 64-битную Java 8 с https://java.com и укажите её в настройках сборки.
+java_ssl_not_supported:Ваша Java слишком старая. Обновите Java, чтобы %s
+java_ssl_to_download_resource:скачать нужный файл.
+java_ssl_to_microsoft_account:войти в аккаунт Minecraft.
+java_ssl_to_authenticate:подключиться к этому серверу.
+java_intel_graphics:У вас видеокарта Intel HD Graphics. Чтобы игра работала правильно, может понадобиться Java 8u51 (сейчас: %s)
+java_intel_graphics_wiki:Как установить Java 8u51: https://github.com/betacraftuk/betacraft-launcher/wiki/intel
+instance_directory:Папка сборки:
+instance_remove_directory:Удалить папку этой сборки навсегда? Это нельзя отменить.
+instance_game_directory_title:Выберите папку для сборки
+instance_remove_question:Точно удалить эту сборку?
+instance_remove_title:Удаление сборки
+instance_change_icon_name:Сменить иконку
+instance_change_icon_title:Выберите новую иконку сборки
+instance_change_icon_unsupported:Этот формат картинки не поддерживается. Поддерживаются: %s
+instance_change_icon_unsupported_title:Неподдерживаемый формат
+instance_change_icon_failed:Что-то пошло не так: %s
+instance_change_icon_failed_title:Не удалось сохранить иконку
+instance_name:Название:
+instance_select_addons:Дополнения
+instance_mods_repository:Каталог модов
+select_instance_title:Выбор сборки
+select_instance_new:Новая сборка
+new_version_found:Вышла новая версия лаунчера (%s). Обновить?
+nick:Игрок: %s
+version:Версия: %s
+server:IP сервера (оставьте пустым для одиночной игры):
+server_title:IP сервера
+classic_resize:<html><font size=5>Растяните окно до нужного размера.<br />Кликните в любом месте окна, чтобы начать игру.</font></html>
+tab_changelog:Новости
+tab_instances:Сборки
+tab_servers:Серверы
+version_custom: [Своя]
+browser_title:Просмотр страницы
+srv_loading:Загрузка списка серверов...
+srv_failed:Не удалось загрузить серверы!
+cl_loading:Загрузка новостей...
+cl_failed:Не удалось загрузить новости!
+force_update:Перекачать файлы игры
+console_output_for:Лог игры "%s"
+console_output:Лог игры
+yes:Да
+no:Нет
+cancel:Отмена
+select:Выбрать
+remove:Удалить
+browse:Обзор
+copy:Копировать
+clear:Очистить
+load:Загрузить
+close:Закрыть
+link:Ссылка
+pause:Пауза
+unpause:Продолжить
+accounts_button:Аккаунты
+accounts_title:Аккаунты
+accounts_hint:Лицензия входит через Microsoft, для пиратского аккаунта хватит ника.
+account_licensed:Лицензия
+account_offline:Пиратка
+account_add_microsoft:Добавить лицензию (Microsoft)...
+account_add_microsoft_short:+ Лицензия
+account_add_offline:Добавить пиратский аккаунт...
+account_add_offline_short:+ Пиратка
+account_manage:Управление аккаунтами...
+account_rename:Переименовать
+account_nickname:Ник:
+account_nick_invalid:Ник должен быть от 1 до 16 символов: латинские буквы, цифры и _
+account_nick_taken:Пиратский аккаунт с таким ником уже есть.
+account_rename_licensed:Ник лицензионного аккаунта меняется только на minecraft.net
+account_remove_question:Удалить аккаунт %s из лаунчера?
+account_status_licensed:Лицензия: %s
+account_status_offline:Пиратка: %s
+account_switch_failed:Не удалось войти в %s. Остаётся текущий аккаунт.
+open_game_dir:Открыть папку сборки
+folders_button:Папки
+folder_open_launcher:Открыть папку лаунчера
+folder_data_own:Своя папка ZloyLauncher
+folder_data_betacraft:Папка BetaCraft (общие версии, сборки и аккаунты)
+folder_data_custom:Другая папка...
+folder_data_choose_title:Выберите папку данных лаунчера
+folder_data_restart:Лаунчер будет использовать папку: %s. Сейчас он перезапустится. Продолжить?
+folder_betacraft_found:Найден BetaCraft Launcher. Использовать его папку (%s)? Версии, сборки и аккаунты будут общими. Это можно поменять потом в меню «Папки».
+folder_betacraft_missing:Папка BetaCraft Launcher не найдена: %s
+folder_linked_suffix: [папка BetaCraft]
+java_select_title:Выбор Java
+java_select_hint:Старые версии Minecraft лучше всего работают на 64-битной Java 8 (выделена зелёным).
+java_select_refresh:Обновить
+java_select_download:Скачать Java 8
+java_select_searching:Ищу Java на компьютере...
+java_select_none:Java не найдена. Скачайте Java 8 или укажите java.exe через «Обзор».
+java_select_found:Найдено установок Java: %d
+java_select_recommended:Рекомендуется для старых версий
+java_select_too_new:Новее 8-й: некоторые старые версии могут не запуститься
+java_select_too_old:Старше 8-й: может не хватить возможностей
+java_select_32bit:Java 8, но не 64-битная: игре будет доступно меньше памяти
+java_select_button:Выбрать...
+java_invalid_file:Этот файл не похож на рабочую Java.
+java_column_version:Версия
+java_column_arch:Архитектура
+java_column_vendor:Производитель
+java_column_path:Путь
+icon_picker_title:Иконка для %s
+icon_picker_own:Своя картинка...
+icon_picker_reset:По умолчанию
+instances_new:+ Новая сборка
+instances_edit:Настроить
+instances_icon:Иконка
+instances_copy:Копировать
+instances_folder:Папка
+instances_rename:Переименовать
+instances_notes:Заметка
+instances_notes_prompt:Короткая заметка о сборке:
+instances_search:Поиск:
+instances_nothing_found:Ничего не найдено
+instances_empty:Сборок пока нет. Нажмите «+ Новая сборка».
+instances_last_played:Последний запуск:
+instances_never:ещё не запускалась
+instances_play_time:В игре:
+instances_bad_name:Название не может быть пустым или содержать символы: %s
+instances_name_taken:Сборка с таким названием уже есть.
+time_minutes:%d мин
+time_hours_minutes:%d ч %d мин
+account_license_failed_suffix: (вход в лицензию не удался)
+mods_refresh:Обновить список
+mods_refreshing:Загрузка...
+servers_mine:Мои серверы
+servers_public:Серверы BetaCraft
+servers_join:Играть
+servers_add:+ Добавить
+servers_edit:Изменить
+servers_empty:Своих серверов пока нет: нажмите «+ Добавить» или сохраните сервер на вкладке «Серверы».
+servers_remove_question:Удалить сервер %s?
+servers_redetect:Определить версию заново
+servers_auto:Авто (определить)
+servers_auto_detected:Авто: %s
+servers_add_title:Добавить сервер
+servers_edit_title:Изменить сервер
+servers_name:Название:
+servers_address:Адрес:
+servers_version:Версия:
+servers_detect_now:Определить
+servers_no_address:Введите адрес сервера.
+servers_save_public:Сохранить в мои серверы
+servers_saved:Сохранено
+detect_running:Определяю версию %s...
+detect_by_list:%s (по списку серверов BetaCraft)
+detect_by_ping:Сервер сообщает версию %s
+detect_unsupported:Сервер работает на %s, такой версии нет в лаунчере.
+detect_era_b18:Сервер b1.8 - 1.3 (точную версию он не сообщает)
+detect_era_beta:Сервер беты 1.5 - 1.7.3, скорее всего b1.7.3
+detect_era_alpha:Сервер альфы / ранней беты (точную версию он не сообщает)
+detect_era_classic:Сервер classic
+detect_failed:Не удалось определить версию: сервер не отвечает или неизвестен.
+detect_choose_manually:Выберите версию вручную.
+servers_public_hint:Кликните по серверу, чтобы зайти. В открывшемся окне версии его можно сохранить в «Мои серверы».
