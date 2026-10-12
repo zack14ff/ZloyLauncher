@@ -1,8 +1,16 @@
+> **🍴 Форк [BetaCraft Launcher](https://github.com/betacraftuk/betacraft-launcher)** — основан на версии [1.09_17](https://github.com/betacraftuk/betacraft-launcher/tree/1.09_17) (ветка `v1`), лицензия GPL-3.0. Всё, что сделано в BetaCraft, — заслуга его авторов; здесь — изменения ZloyLauncher поверх него.
+
+[![Fork of betacraftuk/betacraft-launcher](https://img.shields.io/badge/fork%20of-betacraftuk%2Fbetacraft--launcher-555?logo=github)](https://github.com/betacraftuk/betacraft-launcher)
+[![Последний релиз](https://img.shields.io/github/v/release/zack14ff/ZloyLauncher?label=релиз)](https://github.com/zack14ff/ZloyLauncher/releases/latest)
+[![Сборка](https://github.com/zack14ff/ZloyLauncher/actions/workflows/build-and-release.yml/badge.svg)](https://github.com/zack14ff/ZloyLauncher/actions/workflows/build-and-release.yml)
+
 # ZloyLauncher
 
 ![ZloyLauncher](src/main/resources/icons/logo.png)
 
-Лаунчер старых версий Minecraft (от Pre-Classic до 1.5.2) в старом добром виде: фон из земли, кнопки на своих местах, тёмная лента новостей. Форк [BetaCraft Launcher](https://github.com/betacraftuk/betacraft-launcher).
+Лаунчер старых версий Minecraft (от Pre-Classic до 1.5.2) в старом добром виде: фон из земли, кнопки на своих местах, тёмная лента новостей.
+
+**Скачать:** [последний релиз](https://github.com/zack14ff/ZloyLauncher/releases/latest) — `ZloyLauncher.exe` (Windows, двойной клик) или `ZloyLauncher.jar`.
 
 ## Что добавлено по сравнению с BetaCraft
 - **Несколько аккаунтов**: лицензия (вход через Microsoft) и сколько угодно пиратских.
@@ -13,13 +21,22 @@
 - **Связка с BetaCraft Launcher**: можно работать в папке BetaCraft (`.betacraft`) с общими версиями, сборками и аккаунтами.
   - при первом запуске лаунчер сам предложит это, если найдёт BetaCraft;
   - потом это меняется в меню **Папки** (своя папка / папка BetaCraft / любая другая), после выбора лаунчер перезапускается.
+- **Сборки** — своя вкладка: плитки с иконками (23 встроенные пиксельные или своя картинка), заметки, время в игре, копирование, поиск.
+- **Выбор Java** как в Prism Launcher: все Java на компьютере с версией и архитектурой, Java 8 подсвечена.
+- **Мои серверы** — своя вкладка: свои серверы с иконками и онлайном, вход прямо из лаунчера, автоопределение версии сервера (по списку BetaCraft или опросом сервера) или выбор версии вручную, включая свои/модовые.
+- **Статус в Discord**: сборка, сервер и его онлайн («19 из 400»); что показывать — настраивается.
+- **Свой прокси скинов и звуков**: прокси BetaCraft (`betacraft.uk:11705`) больше не работает, поэтому лаунчер сам отдаёт старым версиям звуки (из хранилища Mojang) и скины/плащи (из профилей Mojang).
+- **Головы игроков** в окне аккаунтов.
 - Меню **Папки**: открыть папку сборки или папку лаунчера.
 - Встроенный русский язык, работает без интернета.
 - Встроенная страница новостей в стиле старого списка изменений BetaCraft.
 - Новое имя, иконка и логотип. Своя папка данных: `%APPDATA%\.zloylauncher` (Windows), `~/.zloylauncher` (Linux), `~/Library/Application Support/zloylauncher` (macOS).
 - Автообновление с серверов BetaCraft отключено (иначе оно заменило бы лаунчер на BetaCraft).
 
-Всё остальное осталось от BetaCraft: прокси скинов и звуков, исправления для старых версий, список серверов, каталог модов, дополнения, Discord RPC, настройки сборок.
+Всё остальное осталось от BetaCraft: исправления для старых версий, список серверов, каталог модов, дополнения, настройки сборок.
+
+## Релизы
+Релизы делаются сами: при пуше в `main` GitHub Actions собирает `.jar` и `.exe`, и если версии из `Launcher.VERSION` ещё нет среди релизов, публикует релиз `vX.Y.Z` с описанием из страницы «Новости» (`src/main/resources/changelog/ru.html`). Новая версия = поднять `VERSION` и добавить запись в «Новости».
 
 ## Сборка
 Нужен JDK 17 или 21 (Gradle 8.14 не запускается на Java 25):
@@ -42,7 +59,7 @@ gradlew build
 3. Скопируйте Application ID и допишите в `launcher/launcher.settings` (в папке данных) строку `discordAppId:ВАШ_ID`, либо поменяйте `DISCORD_APP_ID` в `BC.java`.
 
 ## Откуда что качается
-Версии игры, библиотеки, языки, список серверов и моды по-прежнему загружаются с серверов BetaCraft (`files.betacraft.uk`, `api.betacraft.uk`). Вход в лицензию использует Microsoft-приложение BetaCraft, поэтому на странице входа Microsoft будет написано BetaCraft.
+Версии игры, библиотеки, языки, список серверов и моды по-прежнему загружаются с серверов BetaCraft (`files.betacraft.uk`, `api.betacraft.uk`). Звуки — с `resources.download.minecraft.net`, скины — через API Mojang. Вход в лицензию использует Microsoft-приложение BetaCraft, поэтому на странице входа Microsoft будет написано BetaCraft.
 
 ## Лицензия
 GPL-3.0, как и у BetaCraft Launcher (см. [LICENSE](LICENSE)). Оригинальный код: https://github.com/betacraftuk/betacraft-launcher
