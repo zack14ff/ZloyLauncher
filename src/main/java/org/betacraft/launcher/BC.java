@@ -48,6 +48,12 @@ public class BC {
 		return getSetting("discordImageKey", def);
 	}
 
+	/** A true/false launcher setting, def when it isn't set */
+	public static boolean getFlag(String key, boolean def) {
+		String value = getSetting(key, null);
+		return value == null ? def : Boolean.parseBoolean(value);
+	}
+
 	private static String getSetting(String key, String def) {
 		String value = SETTINGS == null ? null : SETTINGS.getProperty(key);
 		return value == null || value.trim().length() == 0 ? def : value.trim();

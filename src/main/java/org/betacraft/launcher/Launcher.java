@@ -47,7 +47,7 @@ import uk.betacraft.json.lib.MouseFixMacOSJson;
 
 /** Main class */
 public class Launcher {
-	public static String VERSION = "1.2"; // TODO Always update this
+	public static String VERSION = "1.2.3"; // TODO Always update this
 
 	public static Instance currentInstance;
 	public static boolean forceUpdate = false;
@@ -671,6 +671,11 @@ public class Launcher {
 					params.add("-Dzloylauncher.version=" + instance.version);
 				}
 
+				// shown in the Discord status; encoded so any language survives the command line
+				if (serverNameForLaunch != null && server != null && !server.equals("-")) {
+					params.add("-Dzloylauncher.serverName=" + java.net.URLEncoder.encode(serverNameForLaunch, "UTF-8"));
+				}
+
 				VersionInfo info = Release.getReleaseByName(instance.version).getInfo();
 
 				// Required to fix the following on MacOS: Classic, Indev after 0129-2, Infdev and Alpha to 1.0.1
@@ -809,7 +814,15 @@ public class Launcher {
 	 * saved in the instance. Runs in its own thread, like the Play button.
 	 */
 	public static void launchOnServer(final String version, final String address, final String mppass) {
+		launchOnServer(version, address, mppass, null);
+	}
+
+	/** Name of the server being joined, for the Discord status */
+	public static volatile String serverNameForLaunch = null;
+
+	public static void launchOnServer(final String version, final String address, final String mppass, final String serverName) {
 		final Instance instance = currentInstance;
+		serverNameForLaunch = serverName;
 		Window.playButton.setEnabled(false);
 		Util.saveAccounts();
 		new Thread("Server-Join") {

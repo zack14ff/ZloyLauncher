@@ -389,7 +389,7 @@ public class LegacyProxy {
 		return o.has("id") ? o.get("id").getAsString() : null;
 	}
 
-	private static String textureUrl(String uuid, String kind) throws Exception {
+	static String textureUrl(String uuid, String kind) throws Exception {
 		byte[] profile = download("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid);
 		JsonObject o = new JsonParser().parse(new String(profile, "UTF-8")).getAsJsonObject();
 		for (JsonElement p : o.getAsJsonArray("properties")) {

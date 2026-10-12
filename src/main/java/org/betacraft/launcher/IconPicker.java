@@ -35,18 +35,32 @@ public class IconPicker extends JDialog {
 	};
 
 	private boolean changed = false;
-	private final Instance instance;
+	/** Where the chosen icon is stored as a PNG; no file means the default icon */
+	private final File iconFile;
 
 	/** Lets the user pick an icon for the instance, returns true if it changed */
 	public static boolean pick(Component parent, Instance instance) {
-		IconPicker p = new IconPicker(parent == null ? null : SwingUtilities.getWindowAncestor(parent), instance);
+		return pick(parent, instance.name, instance.getIconFile(), null);
+	}
+
+	/**
+	 * Picks an icon for anything that keeps it in one PNG file (instances, saved servers).
+	 * @param betaCraftAddress a server address to offer its icon from BetaCraft's list, or null
+	 */
+	public static boolean pick(Component parent, String name, File iconFile, String betaCraftAddress) {
+		IconPicker p = new IconPicker(parent == null ? null : SwingUtilities.getWindowAncestor(parent), name, iconFile, betaCraftAddress);
 		p.setVisible(true);
 		return p.changed;
 	}
 
-	private IconPicker(java.awt.Window owner, final Instance instance) {
-		super(owner, String.format(Lang.ICON_PICKER_TITLE, instance.name), ModalityType.APPLICATION_MODAL);
-		this.instance = instance;
+	private void setIcon(java.io.InputStream in) {
+		iconFile.getParentFile().mkdirs();
+		Util.copy(in, iconFile);
+	}
+
+	private IconPicker(java.awt.Window owner, String targetName, File iconFile, final String betaCraftAddress) {
+		super(owner, String.format(Lang.ICON_PICKER_TITLE, targetName), ModalityType.APPLICATION_MODAL);
+		this.iconFile = iconFile;
 		this.setIconImage(Window.img);
 		this.setLayout(new BorderLayout());
 
@@ -64,7 +78,7 @@ public class IconPicker extends JDialog {
 				b.setBackground(Color.DARK_GRAY);
 				b.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						instance.setIcon(IconPicker.class.getResourceAsStream("/icons/instance/" + name + ".png"));
+						setIcon(IconPicker.class.getResourceAsStream("/icons/instance/" + name + ".png"));
 						changed = true;
 						dispose();
 					}
@@ -85,10 +99,27 @@ public class IconPicker extends JDialog {
 		});
 		bottom.add(own);
 
+		if (betaCraftAddress != null) {
+			JButton fromList = new JButton(Lang.ICON_PICKER_BETACRAFT);
+			fromList.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					byte[] data = ServerStatus.betaCraftIcon(betaCraftAddress);
+					if (data == null) {
+						JOptionPane.showMessageDialog(IconPicker.this, Lang.ICON_PICKER_BETACRAFT_NONE, getTitle(), JOptionPane.INFORMATION_MESSAGE);
+						return;
+					}
+					setIcon(new java.io.ByteArrayInputStream(data));
+					changed = true;
+					dispose();
+				}
+			});
+			bottom.add(fromList);
+		}
+
 		JButton reset = new JButton(Lang.ICON_PICKER_RESET);
 		reset.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				instance.setIcon((File) null);
+				IconPicker.this.iconFile.delete();
 				changed = true;
 				dispose();
 			}
@@ -124,7 +155,6 @@ public class IconPicker extends JDialog {
 			}
 			// stored as a square PNG, big pictures are shrunk so the list stays fast
 			int size = Math.min(256, Math.max(img.getWidth(), img.getHeight()));
-			File iconFile = instance.getIconFile();
 			iconFile.getParentFile().mkdirs();
 			ImageIO.write(Instance.scaleIcon(img, size), "png", iconFile);
 			changed = true;

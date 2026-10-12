@@ -1,0 +1,97 @@
+# Builds ZloyLauncher on every push. When the version in Launcher.java is new
+# (there is no release with that tag yet), a GitHub release is made with the .jar and .exe,
+# its notes taken from the top entry of the built-in news page.
+
+name: Build & release
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    # Windows: the .exe starter is compiled with the C# compiler that ships with it
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+
+    - name: Build
+      shell: bash
+      run: ./gradlew build --no-daemon
+
+    - name: Read version
+      id: version
+      shell: bash
+      run: |
+        version=$(sed -n 's/.*public static String VERSION = "\([^"]*\)".*/\1/p' src/main/java/org/betacraft/launcher/Launcher.java)
+        echo "Launcher version: $version"
+        echo "version=$version" >> "$GITHUB_OUTPUT"
+        echo "tag=v$version" >> "$GITHUB_OUTPUT"
+
+    - name: Upload build
+      uses: actions/upload-artifact@v4
+      with:
+        name: ZloyLauncher-${{ steps.version.outputs.version }}
+        path: |
+          build/libs/ZloyLauncher.jar
+          build/libs/ZloyLauncher.exe
+
+    - name: Release notes from the news page
+      if: github.event_name != 'pull_request'
+      shell: bash
+      run: |
+        python - <<'EOF'
+        import html, re
+        page = open('src/main/resources/changelog/ru.html', encoding='utf-8').read()
+        entry = page.split('<span class="title">')[1]
+        lines = []
+        for line in entry.splitlines()[1:]:
+            line = line.strip()
+            if line.startswith('<span class="title">') or line.startswith('<a class="title"'):
+                break  # the previous version starts here
+            if not line:
+                continue
+            text = html.unescape(re.sub(r'<[^>]+>', '', line)).strip()
+            if not text:
+                continue
+            if 'class="section"' in line or (text.endswith(':') and not text.startswith(('+', '•'))):
+                lines.append('\n**' + text + '**')
+            elif 'class="date"' in line:
+                lines.append('_' + text + '_\n')
+            else:
+                lines.append('- ' + text.lstrip('+• ').strip())
+        notes = '\n'.join(lines).strip()
+        notes += '\n\n---\n**ZloyLauncher.exe** - запуск двойным кликом (Windows), **ZloyLauncher.jar** - `java -jar ZloyLauncher.jar`.\n'
+        notes += 'Форк [BetaCraft Launcher](https://github.com/betacraftuk/betacraft-launcher), GPL-3.0.\n'
+        open('release-notes.md', 'w', encoding='utf-8').write(notes)
+        print(notes)
+        EOF
+
+    - name: Make the release (new versions only)
+      if: github.event_name != 'pull_request'
+      shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        tag="${{ steps.version.outputs.tag }}"
+        if gh release view "$tag" > /dev/null 2>&1; then
+          echo "Release $tag already exists - nothing to do. Bump VERSION in Launcher.java for a new one."
+        else
+          gh release create "$tag" build/libs/ZloyLauncher.jar build/libs/ZloyLauncher.exe \
+            --title "ZloyLauncher $tag" \
+            --notes-file release-notes.md \
+            --target "${{ github.sha }}"
+        fi

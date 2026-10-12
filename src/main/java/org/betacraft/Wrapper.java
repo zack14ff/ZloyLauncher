@@ -167,21 +167,8 @@ public class Wrapper extends Applet implements AppletStub {
 		}  catch (Throwable t) {}
 
 		if (this.discord) {
-			// JNA sends strings in the system code page by default (cp1251 on Russian Windows),
-			// Discord wants UTF-8 - otherwise Cyrillic shows up as question marks
-			System.setProperty("jna.encoding", "UTF-8");
-
-			String applicationId = org.betacraft.launcher.BC.getDiscordAppId();
-			DiscordEventHandlers handlers = new DiscordEventHandlers();
-			DiscordRPC.discordInitialize(applicationId, handlers, true);
-
-			DiscordRichPresence presence = new DiscordRichPresence();
-			presence.startTimestamp = System.currentTimeMillis() / 1000;
-			presence.state = String.format(VER, version);
-			presence.details = String.format(USR, user);
-			presence.largeImageKey = org.betacraft.launcher.BC.getDiscordImageKey();
-			presence.largeImageText = org.betacraft.launcher.BC.NAME;
-			DiscordRPC.discordUpdatePresence(presence);
+			// instance, version, server and its player count, as set in the launcher's Discord settings
+			org.betacraft.launcher.RichPresence.start(user, version, ver_prefix, server);
 			discordThread = new DiscordThread();
 		}
 

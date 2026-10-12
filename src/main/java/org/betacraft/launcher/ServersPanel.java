@@ -17,6 +17,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,13 +46,21 @@ import org.betacraft.launcher.SavedServers.Server;
 /** "My servers" tab (the user's own list, like the old Multiplayer screen) and the "Servers" tab (BetaCraft's public list) */
 public class ServersPanel extends JPanel {
 	private static BufferedImage background, packIcon;
+	/** Server id -> its icon at 32px, and -> its last known player count */
+	static final java.util.Map<String, BufferedImage> icons = new java.util.concurrent.ConcurrentHashMap<String, BufferedImage>();
+	static final java.util.Map<String, ServerStatus.Info> statuses = new java.util.concurrent.ConcurrentHashMap<String, ServerStatus.Info>();
+	private javax.swing.Timer statusTimer;
 
 	private final DefaultListModel model = new DefaultListModel();
 	private final JList list;
 	private final JLabel status;
 
+	/** "My servers" tab, otherwise it's BetaCraft's public list */
+	private final boolean mineTab;
+
 	public ServersPanel(boolean mineTab) {
 		super(new BorderLayout());
+		this.mineTab = mineTab;
 		try {
 			if (background == null) background = ImageIO.read(ServersPanel.class.getResourceAsStream("/icons/news_bg.png"));
 			if (packIcon == null) packIcon = Instance.scaleIcon(ImageIO.read(ServersPanel.class.getResourceAsStream("/icons/server_pack.png")), 32);
@@ -87,6 +96,11 @@ public class ServersPanel extends JPanel {
 					SavedServers.save();
 					refresh();
 				}
+			}
+		}));
+		buttons.add(button(Lang.INSTANCES_ICON, new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				changeIcon(selected());
 			}
 		}));
 		buttons.add(button(Lang.SERVERS_EDIT, new ActionListener() {
@@ -171,12 +185,61 @@ public class ServersPanel extends JPanel {
 	}
 
 	public void refresh() {
+		if (!mineTab) return;
 		Server sel = selected();
 		model.clear();
-		for (Server s : SavedServers.servers) model.addElement(s);
+		for (Server s : SavedServers.servers) {
+			model.addElement(s);
+			loadIcon(s);
+		}
 		if (sel != null && model.contains(sel)) list.setSelectedValue(sel, true);
 		else if (!model.isEmpty()) list.setSelectedIndex(0);
 		status.setText(model.isEmpty() ? Lang.SERVERS_EMPTY : " ");
+		refreshStatuses();
+
+		// keep the player counts fresh while the tab is open
+		if (statusTimer == null) {
+			statusTimer = new javax.swing.Timer(60000, new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					if (!isShowing()) {
+						if (getParent() == null) statusTimer.stop();
+						return;
+					}
+					refreshStatuses();
+				}
+			});
+			statusTimer.start();
+		}
+	}
+
+	private static void loadIcon(Server s) {
+		BufferedImage img = null;
+		try {
+			File f = s.iconFile();
+			if (f.isFile()) img = ImageIO.read(f);
+		} catch (Throwable t) {}
+		if (img == null) icons.remove(s.id);
+		else icons.put(s.id, Instance.scaleIcon(img, 32));
+	}
+
+	private void refreshStatuses() {
+		final List<Server> servers = new ArrayList<Server>(SavedServers.servers);
+		new Thread("Server-Status") {
+			public void run() {
+				for (Server s : servers) {
+					statuses.put(s.id, ServerStatus.query(s.address));
+					list.repaint();
+				}
+			}
+		}.start();
+	}
+
+	private void changeIcon(Server s) {
+		if (s == null) return;
+		if (IconPicker.pick(this, s.name, s.iconFile(), s.address)) {
+			loadIcon(s);
+			list.repaint();
+		}
 	}
 
 	Server selected() {
@@ -214,6 +277,13 @@ public class ServersPanel extends JPanel {
 			}
 		});
 		menu.add(join);
+		JMenuItem icon = new JMenuItem(Lang.INSTANCES_ICON);
+		icon.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				changeIcon(s);
+			}
+		});
+		menu.add(icon);
 		JMenuItem redetect = new JMenuItem(Lang.SERVERS_REDETECT);
 		redetect.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -253,7 +323,7 @@ public class ServersPanel extends JPanel {
 		}
 		s.lastJoined = System.currentTimeMillis();
 		SavedServers.save();
-		Launcher.launchOnServer(version, s.fullAddress(), "-");
+		Launcher.launchOnServer(version, s.fullAddress(), "-", s.name);
 	}
 
 	private static void detectAsync(final Server s, final boolean joinAfter, final Component parent) {
@@ -337,7 +407,9 @@ public class ServersPanel extends JPanel {
 				g.setColor(new Color(0x808080));
 				g.drawRect(2, 1, getWidth() - 5, HEIGHT - 3);
 			}
-			if (packIcon != null) g.drawImage(packIcon, 8, (HEIGHT - 32) / 2, null);
+			BufferedImage icon = icons.get(server.id);
+			if (icon == null) icon = packIcon;
+			if (icon != null) g.drawImage(icon, 8, (HEIGHT - 32) / 2, null);
 
 			int x = 50;
 			g.setFont(getFont().deriveFont(Font.BOLD, 12f));
@@ -354,7 +426,26 @@ public class ServersPanel extends JPanel {
 			else version = Lang.SERVERS_AUTO;
 			int w = g.getFontMetrics().stringWidth(version);
 			g.setColor(server.isAuto() ? new Color(0x9C9CFF) : new Color(0xA0A0A0));
-			g.drawString(version, getWidth() - w - 10, 24);
+			g.drawString(version, getWidth() - w - 10, 31);
+
+			// player count, like the old server list
+			ServerStatus.Info info = statuses.get(server.id);
+			String online;
+			Color color;
+			if (info == null) {
+				online = Lang.SERVERS_ONLINE_CHECKING;
+				color = new Color(0x808080);
+			} else if (info.known()) {
+				online = String.format(Lang.SERVERS_ONLINE, info.online, info.max);
+				color = new Color(0x7CFC7C);
+			} else {
+				online = Lang.SERVERS_ONLINE_UNKNOWN;
+				color = new Color(0x707070);
+			}
+			g.setFont(getFont().deriveFont(Font.BOLD, 11f));
+			w = g.getFontMetrics().stringWidth(online);
+			g.setColor(color);
+			g.drawString(online, getWidth() - w - 10, 16);
 		}
 	}
 

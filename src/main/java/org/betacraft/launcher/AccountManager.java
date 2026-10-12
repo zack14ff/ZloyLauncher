@@ -411,10 +411,17 @@ public class AccountManager extends JFrame implements LanguageElement {
 		public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 			Credentials c = (Credentials) value;
 			boolean current = Launcher.auth != null && sameAccount(c, Launcher.auth.getCredentials());
-			String text = (current ? "> " : "   ") + displayName(c);
+			String text = (current ? "» " : "") + displayName(c);
 
 			JLabel label = (JLabel) super.getListCellRendererComponent(list, text, index, isSelected, cellHasFocus);
 			label.setBorder(BorderFactory.createEmptyBorder(3, 6, 3, 6));
+			final JList owner = list;
+			label.setIcon(new javax.swing.ImageIcon(Heads.get(c, 24, new Runnable() {
+				public void run() {
+					owner.repaint();
+				}
+			})));
+			label.setIconTextGap(8);
 			label.setFont(label.getFont().deriveFont(current ? Font.BOLD : Font.PLAIN));
 			if (!isSelected) {
 				label.setBackground(Color.BLACK);

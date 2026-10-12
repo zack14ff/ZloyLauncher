@@ -255,7 +255,7 @@ public class Window extends JFrame implements ActionListener, LanguageElement {
 
 		for (final Credentials c : Launcher.accounts.accounts) {
 			if (c == null) continue;
-			JRadioButtonMenuItem item = new JRadioButtonMenuItem(AccountManager.displayName(c));
+			JRadioButtonMenuItem item = new JRadioButtonMenuItem(AccountManager.displayName(c), new javax.swing.ImageIcon(Heads.get(c, 16, null)));
 			item.setSelected(AccountManager.sameAccount(c, current));
 			if (AccountManager.isLicensed(c)) item.setForeground(AccountManager.LICENSED_MENU_COLOR);
 			item.addActionListener(new ActionListener() {
@@ -332,13 +332,21 @@ public class Window extends JFrame implements ActionListener, LanguageElement {
 		String status = String.format(licensed ? Lang.ACCOUNT_STATUS_LICENSED : Lang.ACCOUNT_STATUS_OFFLINE, c.username);
 		if (!licensed && AccountManager.licenseLoginFailed) status += Lang.ACCOUNT_LICENSE_FAILED_SUFFIX;
 		accountStatus.setText(status);
+		accountStatus.setIcon(new javax.swing.ImageIcon(Heads.get(c, 16, new Runnable() {
+			public void run() {
+				updateAccountStatus();
+			}
+		})));
+		accountStatus.setIconTextGap(5);
 		accountStatus.setForeground(licensed ? AccountManager.LICENSED_COLOR : Color.LIGHT_GRAY);
 	}
 
 	public static void setTab(Tab tab) {
 
 		if (tab == Tab.CHANGELOG) {
-			new Thread() {
+			// the news page ships with the launcher, so this is quick - and on the UI thread
+			// it can't finish after another tab was picked and cover it
+			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
 					if (Window.centerPanel != null) mainWindow.getContentPane().remove(Window.centerPanel);
 					centerPanel = new WebsitePanel().getUpdateNews(true);
@@ -346,8 +354,10 @@ public class Window extends JFrame implements ActionListener, LanguageElement {
 					mainWindow.add(Window.centerPanel, BorderLayout.CENTER);
 					mainWindow.setPreferredSize(mainWindow.getSize());
 					if (mainWindow.isVisible()) mainWindow.pack();
+					mainWindow.validate();
+					mainWindow.repaint();
 				}
-			}.start();
+			});
 		} else if (tab == Tab.SERVER_LIST || tab == Tab.MY_SERVERS) {
 			final Tab chosen = tab;
 			SwingUtilities.invokeLater(new Runnable() {

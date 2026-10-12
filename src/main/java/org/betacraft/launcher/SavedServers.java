@@ -12,6 +12,8 @@ public class SavedServers {
 	public static final String AUTO = "auto";
 
 	public static class Server {
+		/** Stays the same when the server is renamed or moves, names its icon file */
+		public String id;
 		public String name;
 		public String address;
 		/** A version name, or AUTO */
@@ -21,9 +23,12 @@ public class SavedServers {
 		public String detectedHow;
 		public long lastJoined;
 
-		public Server() {}
+		public Server() {
+			this.id = java.util.UUID.randomUUID().toString();
+		}
 
 		public Server(String name, String address, String version) {
+			this();
 			this.name = name;
 			this.address = address;
 			this.version = version == null ? AUTO : version;
@@ -36,6 +41,11 @@ public class SavedServers {
 		/** The version to join with, null if it still has to be detected */
 		public String effectiveVersion() {
 			return isAuto() ? detectedVersion : version;
+		}
+
+		/** The server's own icon; when the file doesn't exist the gray pack icon is shown */
+		public File iconFile() {
+			return new File(BC.get() + "launcher" + File.separator + "server-icons", id + ".png");
 		}
 
 		/** host:port, with the default port added */
@@ -66,7 +76,9 @@ public class SavedServers {
 			List<Server> loaded = new ArrayList<Server>();
 			if (ff != null && ff.servers != null) {
 				for (Server s : ff.servers) {
-					if (s != null && s.address != null && s.address.trim().length() > 0) loaded.add(s);
+					if (s == null || s.address == null || s.address.trim().length() == 0) continue;
+					if (s.id == null) s.id = java.util.UUID.randomUUID().toString();
+					loaded.add(s);
 				}
 			}
 			servers = loaded;

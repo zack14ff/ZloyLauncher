@@ -205,3 +205,18 @@ detect_era_classic:Сервер classic
 detect_failed:Не удалось определить версию: сервер не отвечает или неизвестен.
 detect_choose_manually:Выберите версию вручную.
 servers_public_hint:Кликните по серверу, чтобы зайти. В открывшемся окне версии его можно сохранить в «Мои серверы».
+rpc_on_server:На сервере: %s
+rpc_singleplayer:Одиночная игра
+rpc_multiplayer:В игре
+discord_settings:Статус в Discord...
+discord_settings_title:Статус в Discord
+discord_show_instance:Показывать сборку и версию
+discord_show_server:Показывать сервер, на котором играю
+discord_show_players:Показывать онлайн сервера (19 из 400)
+discord_show_nick:Показывать мой ник
+discord_preview_playing:Играет в ZloyLauncher
+icon_picker_betacraft:Иконка с BetaCraft
+icon_picker_betacraft_none:В списке BetaCraft нет иконки для этого сервера.
+servers_online:Онлайн: %d / %d
+servers_online_checking:проверяю...
+servers_online_unknown:онлайн неизвестен

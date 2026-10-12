@@ -55,6 +55,7 @@ public class InstanceSettings extends JFrame implements LanguageElement {
 	public JLabel removelabel;
 	public JLabel instanceNameText;
 	public JButton addons;
+	public JButton discordButton;
 	public JButton modrepo;
 	static Image img = null;
 	static Image image = null;
@@ -127,6 +128,18 @@ public class InstanceSettings extends JFrame implements LanguageElement {
 		RPCCheck.setOpaque(false);
 		RPCCheck.setSelected(Launcher.currentInstance.RPC);
 		panel.add(RPCCheck, constr);
+
+		constr.gridy++;
+		discordButton = new JButton(Lang.DISCORD_SETTINGS);
+		discordButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				DiscordSettings.show(InstanceSettings.this);
+			}
+		});
+		JPanel discordRow = new JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 22, 0));
+		discordRow.setOpaque(false);
+		discordRow.add(discordButton);
+		panel.add(discordRow, constr);
 		
 		constr.gridy++;
 		intelFix = new JCheckBox(Lang.OPTIONS_INTEL_TRICK);
@@ -437,6 +450,7 @@ public class InstanceSettings extends JFrame implements LanguageElement {
 		proxyCheck.setText(Lang.OPTIONS_PROXY);
 		keepOpenCheck.setText(Lang.OPTIONS_KEEP_OPEN);
 		RPCCheck.setText(Lang.OPTIONS_RPC);
+		discordButton.setText(Lang.DISCORD_SETTINGS);
 		intelFix.setText(Lang.OPTIONS_INTEL_TRICK);
 		parametersText.setText(Lang.OPTIONS_LAUNCH_ARGS);
 		dirChooser.setText(Lang.BROWSE);
