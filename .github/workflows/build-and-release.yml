@@ -52,6 +52,10 @@ jobs:
     - name: Release notes from the news page
       if: github.event_name != 'pull_request'
       shell: bash
+      env:
+        # Windows runners default to cp1252, the notes are Russian
+        PYTHONUTF8: '1'
+        PYTHONIOENCODING: utf-8
       run: |
         python - <<'EOF'
         import html, re
