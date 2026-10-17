@@ -380,7 +380,7 @@ public class LegacyProxy {
 		return result;
 	}
 
-	private static String lookupUuid(String name) throws Exception {
+	static String lookupUuid(String name) throws Exception {
 		HttpURLConnection con = (HttpURLConnection) new URL("https://api.mojang.com/users/profiles/minecraft/" + name).openConnection(Proxy.NO_PROXY);
 		con.setConnectTimeout(8000);
 		con.setReadTimeout(8000);

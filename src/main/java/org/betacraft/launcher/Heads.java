@@ -24,22 +24,41 @@ public class Heads {
 	 * The head at the given size. A licensed account's real head is fetched in the background:
 	 * until then Steve is returned, and whenRead runs once it's there.
 	 */
+	/** Keys whose lookup failed (e.g. an offline nickname nobody owns), with the time, so it isn't retried every repaint */
+	private static final Map<String, Long> failed = new ConcurrentHashMap<String, Long>();
+
+	/**
+	 * Key of the head: the uuid of a license, or "name-nick" for an offline account - in the game an
+	 * offline nickname gets the skin of the real player with that name, so the head shows it too.
+	 */
+	static String key(Credentials c) {
+		if (AccountManager.isLicensed(c) && c.local_uuid != null) return c.local_uuid.replace("-", "");
+		if (c.username != null && c.username.matches("[A-Za-z0-9_]{3,16}")) return "name-" + c.username.toLowerCase();
+		return null;
+	}
+
 	public static BufferedImage get(Credentials c, int size, final Runnable whenReady) {
 		BufferedImage face = null;
-		if (AccountManager.isLicensed(c) && c.local_uuid != null) {
-			final String uuid = c.local_uuid.replace("-", "");
-			face = faces.get(uuid);
+		final String key = key(c);
+		if (key != null) {
+			face = faces.get(key);
 			if (face == null) {
-				face = fromDisk(uuid);
-				if (face != null) faces.put(uuid, face);
+				face = fromDisk(key);
+				if (face != null) faces.put(key, face);
 			}
-			if ((face == null || isStale(uuid)) && loading.add(uuid)) {
-				new Thread("Head-" + uuid) {
+			Long failedAt = failed.get(key);
+			boolean mayTry = failedAt == null || System.currentTimeMillis() - failedAt > 10L * 60 * 1000;
+			if ((face == null || isStale(key)) && mayTry && loading.add(key)) {
+				new Thread("Head-" + key) {
 					public void run() {
-						BufferedImage fresh = download(uuid);
-						loading.remove(uuid);
-						if (fresh == null) return;
-						faces.put(uuid, fresh);
+						BufferedImage fresh = download(key);
+						loading.remove(key);
+						if (fresh == null) {
+							failed.put(key, System.currentTimeMillis());
+							return;
+						}
+						failed.remove(key);
+						faces.put(key, fresh);
 						if (whenReady != null) SwingUtilities.invokeLater(whenReady);
 					}
 				}.start();
@@ -68,8 +87,10 @@ public class Heads {
 		return !f.isFile() || System.currentTimeMillis() - f.lastModified() > 24L * 3600 * 1000;
 	}
 
-	private static BufferedImage download(String uuid) {
+	private static BufferedImage download(String key) {
 		try {
+			String uuid = key.startsWith("name-") ? LegacyProxy.lookupUuid(key.substring(5)) : key;
+			if (uuid == null) return null;
 			String url = LegacyProxy.textureUrl(uuid, "SKIN");
 			if (url == null) return null;
 			BufferedImage skin = ImageIO.read(new ByteArrayInputStream(LegacyProxy.download(url.replace("http://", "https://"))));
@@ -83,12 +104,12 @@ public class Heads {
 			if (hasTransparency(hat)) g.drawImage(hat, 0, 0, null);
 			g.dispose();
 
-			File f = file(uuid);
+			File f = file(key);
 			f.getParentFile().mkdirs();
 			ImageIO.write(face, "png", f);
 			return face;
 		} catch (Throwable t) {
-			System.out.println("Couldn't load the head of " + uuid + ": " + t);
+			System.out.println("Couldn't load the head of " + key + ": " + t);
 			return null;
 		}
 	}

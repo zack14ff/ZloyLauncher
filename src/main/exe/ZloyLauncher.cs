@@ -16,8 +16,8 @@ using System.Windows.Forms;
 [assembly: AssemblyTitle("ZloyLauncher")]
 [assembly: AssemblyProduct("ZloyLauncher")]
 [assembly: AssemblyDescription("Old Minecraft versions launcher")]
-[assembly: AssemblyVersion("1.3.0.0")]
-[assembly: AssemblyFileVersion("1.3.0.0")]
+[assembly: AssemblyVersion("1.3.1.0")]
+[assembly: AssemblyFileVersion("1.3.1.0")]
 
 static class ZloyLauncherStarter
 {

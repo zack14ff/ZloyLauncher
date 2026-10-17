@@ -84,9 +84,10 @@ public class RichPresence {
 		p.largeImageKey = BC.getDiscordImageKey();
 		p.largeImageText = BC.NAME + " " + Launcher.VERSION;
 		if (flag(SHOW_NICK) && user != null) {
-			// the player's head as the small picture, Steve for offline accounts
+			// the player's head (with the hat layer) as the small picture. minotar.net renders the current skin;
+			// an offline nickname gets the head of the real player with that name, like the skin in the game
 			boolean licensed = uuid != null && uuid.replace("-", "").length() == 32;
-			p.smallImageKey = "https://mc-heads.net/avatar/" + (licensed ? uuid.replace("-", "") : "MHF_Steve") + "/64";
+			p.smallImageKey = "https://minotar.net/helm/" + (licensed ? uuid.replace("-", "") : user) + "/64.png";
 			p.smallImageText = user;
 		}
 

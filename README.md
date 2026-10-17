@@ -54,7 +54,7 @@ gradlew build
 Сборка приложения для macOS: `gradlew osxBuildApp`.
 
 ## Статус в Discord
-Лаунчер показывает «Играет в ZloyLauncher» через своё Discord-приложение. Большая картинка — логотип по прямой ссылке на [discord/logo.png](discord/logo.png) в этом репозитории, маленькая — голова игрока (с mc-heads.net). Другое приложение или картинку можно задать в `launcher/launcher.settings` (в папке данных): `discordAppId:ID` и `discordImageKey:ключ_или_https_ссылка`.
+Лаунчер показывает «Играет в ZloyLauncher» через своё Discord-приложение. Большая картинка — логотип по прямой ссылке на [discord/logo.png](discord/logo.png) в этом репозитории, маленькая — голова игрока со скином (с minotar.net; у пиратского аккаунта — скин игрока с таким же ником, если он есть). Другое приложение или картинку можно задать в `launcher/launcher.settings` (в папке данных): `discordAppId:ID` и `discordImageKey:ключ_или_https_ссылка`.
 
 ## Откуда что качается
 Версии игры, библиотеки, языки, список серверов и моды по-прежнему загружаются с серверов BetaCraft (`files.betacraft.uk`, `api.betacraft.uk`). Звуки — с `resources.download.minecraft.net`, скины — через API Mojang. Вход в лицензию использует Microsoft-приложение BetaCraft, поэтому на странице входа Microsoft будет написано BetaCraft.
