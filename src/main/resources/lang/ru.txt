@@ -220,3 +220,9 @@ icon_picker_betacraft_none:В списке BetaCraft нет иконки для 
 servers_online:Онлайн: %d / %d
 servers_online_checking:проверяю...
 servers_online_unknown:онлайн неизвестен
+shortcut_desktop:Ярлык на рабочем столе
+shortcut_start_menu:Ярлык в меню Пуск
+shortcut_needs_exe:Запустите лаунчер через ZloyLauncher.exe, чтобы делать ярлыки
+shortcut_done:Ярлык создан. Его, как и любую программу, можно закрепить на панели задач и в Пуске.
+shortcut_failed:Не удалось создать ярлык.
+shortcut_offer:Создать ярлыки ZloyLauncher на рабочем столе и в меню Пуск?

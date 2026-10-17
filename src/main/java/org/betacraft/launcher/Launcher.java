@@ -47,7 +47,7 @@ import uk.betacraft.json.lib.MouseFixMacOSJson;
 
 /** Main class */
 public class Launcher {
-	public static String VERSION = "1.2.3"; // TODO Always update this
+	public static String VERSION = "1.3.0"; // TODO Always update this
 
 	public static Instance currentInstance;
 	public static boolean forceUpdate = false;
@@ -411,9 +411,16 @@ public class Launcher {
 		BC.SETTINGS.flushToDisk();
 		try {
 			ArrayList<String> params = new ArrayList<String>();
-			params.add(javapath);
-			params.add("-jar");
-			params.add(BC.currentPath.getAbsolutePath());
+			if (BC.EXE != null && new File(BC.EXE).isFile()) {
+				// through the exe again: keeps the taskbar identity and portable mode.
+				// --new-instance: this window is still open, the exe would just bring it up otherwise
+				params.add(BC.EXE);
+				params.add("--new-instance");
+			} else {
+				params.add(javapath);
+				params.add("-jar");
+				params.add(BC.currentPath.getAbsolutePath());
+			}
 			ProcessBuilder builder = new ProcessBuilder(params);
 			builder.start();
 		} catch (Exception ex) {
@@ -669,6 +676,11 @@ public class Launcher {
 
 				if (instance.savedVersion != null) {
 					params.add("-Dzloylauncher.version=" + instance.version);
+				}
+
+				// a portable launcher's game must find the same data folder
+				if (BC.PORTABLE_DIR != null) {
+					params.add("-Dzloylauncher.portableDir=" + BC.PORTABLE_DIR);
 				}
 
 				// shown in the Discord status; encoded so any language survives the command line

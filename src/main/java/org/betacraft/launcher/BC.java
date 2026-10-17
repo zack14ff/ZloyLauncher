@@ -25,16 +25,19 @@ public class BC {
 	public static boolean prerelease = false;
 	public static boolean nightly = false;
 
-	public static boolean portable = false;
+	/** Folder of a portable ZloyLauncher.exe (one with portable.txt next to it); all data is kept there */
+	public static final String PORTABLE_DIR = System.getProperty("zloylauncher.portableDir");
+	/** The ZloyLauncher.exe the launcher was started from, null when started from the jar */
+	public static final String EXE = System.getProperty("zloylauncher.exe");
+
+	public static boolean portable = PORTABLE_DIR != null;
 	public static boolean wrapped = false;
 
 	/**
-	 * Discord application shown in "Playing ...". Its name and pictures are set on discord.com/developers,
-	 * so this one (BetaCraft's) shows "Betacraft Launcher". Put your own app's id and image key
-	 * in launcher.settings (discordAppId / discordImageKey) or here to show ZloyLauncher instead.
+	 * Discord application shown in "Playing ...": its name (ZloyLauncher) is set on discord.com/developers.
+	 * Another one can be set in launcher.settings (discordAppId / discordImageKey).
 	 */
-	public static final String DISCORD_APP_ID = "939918927989973052";
-	public static final String DISCORD_IMAGE_KEY = "logo_betacraft_1024";
+	public static final String DISCORD_APP_ID = "1561024189014745168";
 
 	private static String resolved = null;
 
@@ -42,10 +45,14 @@ public class BC {
 		return getSetting("discordAppId", DISCORD_APP_ID);
 	}
 
+	/**
+	 * Big picture of the status. Discord also takes a picture by its https address, so this is
+	 * the ZloyLauncher logo straight from the repository - whichever Discord application is used.
+	 */
+	public static final String DISCORD_LOGO_URL = "https://raw.githubusercontent.com/zack14ff/ZloyLauncher/main/discord/logo.png";
+
 	public static String getDiscordImageKey() {
-		// a custom app has its own pictures, "logo" is what README tells to name the uploaded one
-		String def = DISCORD_APP_ID.equals(getDiscordAppId()) ? DISCORD_IMAGE_KEY : "logo";
-		return getSetting("discordImageKey", def);
+		return getSetting("discordImageKey", DISCORD_LOGO_URL);
 	}
 
 	/** A true/false launcher setting, def when it isn't set */
@@ -184,6 +191,7 @@ public class BC {
 	}
 
 	public static String prefBC() {
+		if (PORTABLE_DIR != null) return PORTABLE_DIR;
 		if (wrapped) return currentPath.getAbsoluteFile().getParentFile().getParentFile().getParent();
 		return currentPath.getAbsoluteFile().getParent();
 	}

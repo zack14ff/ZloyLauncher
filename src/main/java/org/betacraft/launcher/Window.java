@@ -589,7 +589,60 @@ public class Window extends JFrame implements ActionListener, LanguageElement {
 		});
 		menu.add(customItem);
 
+		// shortcuts need the .exe (the jar has no icon of its own to point a shortcut at)
+		menu.addSeparator();
+		JMenuItem desktop = new JMenuItem(Lang.SHORTCUT_DESKTOP);
+		desktop.setEnabled(BC.EXE != null);
+		desktop.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				createShortcut("desktop", true);
+			}
+		});
+		menu.add(desktop);
+		JMenuItem startMenu = new JMenuItem(Lang.SHORTCUT_START_MENU);
+		startMenu.setEnabled(BC.EXE != null);
+		startMenu.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				createShortcut("startmenu", true);
+			}
+		});
+		menu.add(startMenu);
+		if (BC.EXE == null) {
+			desktop.setToolTipText(Lang.SHORTCUT_NEEDS_EXE);
+			startMenu.setToolTipText(Lang.SHORTCUT_NEEDS_EXE);
+		}
+
 		return menu;
+	}
+
+	/** Asks ZloyLauncher.exe to make a shortcut to itself (desktop or startmenu) */
+	public static boolean createShortcut(String where, boolean tell) {
+		if (BC.EXE == null) return false;
+		try {
+			Process p = new ProcessBuilder(BC.EXE, "--shortcut", where).start();
+			boolean ok = p.waitFor() == 0;
+			if (tell) {
+				JOptionPane.showMessageDialog(mainWindow, ok ? Lang.SHORTCUT_DONE : Lang.SHORTCUT_FAILED, Lang.FOLDERS_BUTTON,
+						ok ? JOptionPane.INFORMATION_MESSAGE : JOptionPane.WARNING_MESSAGE);
+			}
+			return ok;
+		} catch (Throwable t) {
+			t.printStackTrace();
+			if (tell) JOptionPane.showMessageDialog(mainWindow, Lang.SHORTCUT_FAILED, Lang.FOLDERS_BUTTON, JOptionPane.WARNING_MESSAGE);
+			return false;
+		}
+	}
+
+	/** First start from the exe: offer the shortcuts once */
+	public static void offerShortcuts() {
+		if (BC.EXE == null || "true".equals(BC.SETTINGS.getProperty("shortcutsOffered"))) return;
+		BC.SETTINGS.setProperty("shortcutsOffered", "true");
+		BC.SETTINGS.flushToDisk();
+		int res = JOptionPane.showConfirmDialog(mainWindow, Lang.SHORTCUT_OFFER, BC.NAME, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+		if (res == JOptionPane.YES_OPTION) {
+			boolean ok = createShortcut("desktop", false) & createShortcut("startmenu", false);
+			JOptionPane.showMessageDialog(mainWindow, ok ? Lang.SHORTCUT_DONE : Lang.SHORTCUT_FAILED, BC.NAME, JOptionPane.INFORMATION_MESSAGE);
+		}
 	}
 
 	/** Switches the data folder (null = own one) and restarts the launcher */

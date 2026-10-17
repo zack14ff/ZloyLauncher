@@ -17,7 +17,7 @@ public class RichPresence {
 	public static final String SHOW_PLAYERS = "discordShowPlayers";
 	public static final String SHOW_NICK = "discordShowNick";
 
-	private static String user, version, instance, server, serverName;
+	private static String user, uuid, version, instance, server, serverName;
 	private static long started;
 	private static ServerStatus.Info status;
 
@@ -26,7 +26,8 @@ public class RichPresence {
 	}
 
 	/** Starts the status for this game, called once in the game process */
-	public static void start(String user, String version, String instance, String server) {
+	public static void start(String user, String uuid, String version, String instance, String server) {
+		RichPresence.uuid = uuid;
 		// JNA sends strings in the system code page by default (cp1251 on Russian Windows),
 		// Discord wants UTF-8 - otherwise Cyrillic shows up as question marks
 		System.setProperty("jna.encoding", "UTF-8");
@@ -81,7 +82,13 @@ public class RichPresence {
 		DiscordRichPresence p = new DiscordRichPresence();
 		p.startTimestamp = started;
 		p.largeImageKey = BC.getDiscordImageKey();
-		p.largeImageText = flag(SHOW_NICK) && user != null ? user + " — " + BC.NAME : BC.NAME;
+		p.largeImageText = BC.NAME + " " + Launcher.VERSION;
+		if (flag(SHOW_NICK) && user != null) {
+			// the player's head as the small picture, Steve for offline accounts
+			boolean licensed = uuid != null && uuid.replace("-", "").length() == 32;
+			p.smallImageKey = "https://mc-heads.net/avatar/" + (licensed ? uuid.replace("-", "") : "MHF_Steve") + "/64";
+			p.smallImageText = user;
+		}
 
 		p.details = flag(SHOW_INSTANCE) && instance != null
 				? instance + " (" + version + ")"

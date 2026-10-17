@@ -682,6 +682,12 @@ public class Lang extends JFrame implements LanguageElement {
 		SERVERS_ONLINE = get(langentries, "servers_online", SERVERS_ONLINE);
 		SERVERS_ONLINE_CHECKING = get(langentries, "servers_online_checking", SERVERS_ONLINE_CHECKING);
 		SERVERS_ONLINE_UNKNOWN = get(langentries, "servers_online_unknown", SERVERS_ONLINE_UNKNOWN);
+		SHORTCUT_DESKTOP = get(langentries, "shortcut_desktop", SHORTCUT_DESKTOP);
+		SHORTCUT_START_MENU = get(langentries, "shortcut_start_menu", SHORTCUT_START_MENU);
+		SHORTCUT_NEEDS_EXE = get(langentries, "shortcut_needs_exe", SHORTCUT_NEEDS_EXE);
+		SHORTCUT_DONE = get(langentries, "shortcut_done", SHORTCUT_DONE);
+		SHORTCUT_FAILED = get(langentries, "shortcut_failed", SHORTCUT_FAILED);
+		SHORTCUT_OFFER = get(langentries, "shortcut_offer", SHORTCUT_OFFER);
 		SERVERS_REMOVE_QUESTION = get(langentries, "servers_remove_question", SERVERS_REMOVE_QUESTION);
 		SERVERS_REDETECT = get(langentries, "servers_redetect", SERVERS_REDETECT);
 		SERVERS_AUTO = get(langentries, "servers_auto", SERVERS_AUTO);
@@ -941,6 +947,12 @@ public class Lang extends JFrame implements LanguageElement {
 	public static String SERVERS_ONLINE = "%d / %d online";
 	public static String SERVERS_ONLINE_CHECKING = "checking...";
 	public static String SERVERS_ONLINE_UNKNOWN = "online unknown";
+	public static String SHORTCUT_DESKTOP = "Shortcut on the desktop";
+	public static String SHORTCUT_START_MENU = "Shortcut in the Start menu";
+	public static String SHORTCUT_NEEDS_EXE = "Start the launcher from ZloyLauncher.exe to make shortcuts";
+	public static String SHORTCUT_DONE = "Shortcut created. It can be pinned to the taskbar and Start like any program.";
+	public static String SHORTCUT_FAILED = "Couldn't create the shortcut.";
+	public static String SHORTCUT_OFFER = "Create ZloyLauncher shortcuts on the desktop and in the Start menu?";
 	public static String SERVERS_REMOVE_QUESTION = "Remove server %s?";
 	public static String SERVERS_REDETECT = "Detect the version again";
 	public static String SERVERS_AUTO = "Auto (detect)";

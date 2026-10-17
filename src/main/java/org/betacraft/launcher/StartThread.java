@@ -38,6 +38,11 @@ public class StartThread extends Thread {
 			ex.printStackTrace();
 		}
 		Window.mainWindow.setVisible(true);
+		javax.swing.SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				Window.offerShortcuts();
+			}
+		});
 		Launcher.totalThreads.remove(this);
 	}
 }

@@ -168,7 +168,7 @@ public class Wrapper extends Applet implements AppletStub {
 
 		if (this.discord) {
 			// instance, version, server and its player count, as set in the launcher's Discord settings
-			org.betacraft.launcher.RichPresence.start(user, version, ver_prefix, server);
+			org.betacraft.launcher.RichPresence.start(user, uuid, version, ver_prefix, server);
 			discordThread = new DiscordThread();
 		}
 
